@@ -1,0 +1,19 @@
+[gd_scene load_steps=6 format=3 uid="uid://b17yo3dmfpwlh"]
+
+[ext_resource type="Texture2D" uid="uid://dk3cr4pc74pi0" path="res://assets/texture_4.png" id="1_eyfoh"]
+[ext_resource type="Shader" uid="uid://bxhf31ymwt7jx" path="res://shaders/avg_point_shader.gdshader" id="1_k7pjy"]
+[ext_resource type="Script" uid="uid://00x3djesfv4p" path="res://scripts/hand.gd" id="2_cmdsa"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m1v21"]
+render_priority = 0
+shader = ExtResource("1_k7pjy")
+shader_parameter/albedo_texture = ExtResource("1_eyfoh")
+shader_parameter/alpha = 0.7
+
+[sub_resource type="SphereMesh" id="SphereMesh_1gd3j"]
+
+[node name="hand" type="MeshInstance3D" groups=["hand"]]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_m1v21")
+mesh = SubResource("SphereMesh_1gd3j")
+script = ExtResource("2_cmdsa")
