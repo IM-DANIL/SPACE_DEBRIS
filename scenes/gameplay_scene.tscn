@@ -1,8 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://bsmjar5ytjidp"]
+[gd_scene load_steps=7 format=3 uid="uid://bsmjar5ytjidp"]
 
 [ext_resource type="Texture2D" uid="uid://bxpsm1lv87ady" path="res://assets/texture_01.png" id="1_01stm"]
-[ext_resource type="PackedScene" uid="uid://cein5x4bhedug" path="res://scenes/player.tscn" id="2_xpbwm"]
-[ext_resource type="PackedScene" uid="uid://b17yo3dmfpwlh" path="res://scenes/hand.tscn" id="4_27dq3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_01stm"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -27,8 +25,8 @@ script/source = "extends Panel
 @onready var GAMEPLAY_SCENE: Node3D = $\"../..\"
 @onready var ADDRES_ENTRY: LineEdit = $MarginContainer/VBoxContainer/addres_entry
 
-const PLAYER: PackedScene = preload(\"res://scenes/player.tscn\")
-const PORT: int = 9999
+const PLAYER_NODE: PackedScene = preload(\"res://scenes/player_node.tscn\")
+const PORT: int = 135
 var enet_peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 
 func _on_host_button_pressed() -> void:
@@ -37,24 +35,35 @@ func _on_host_button_pressed() -> void:
 	enet_peer.create_server(PORT)
 	multiplayer.multiplayer_peer = enet_peer 
 	multiplayer.peer_connected.connect(_add_player)
+	multiplayer.peer_disconnected.connect(_remove_player)
+	
 	_add_player(multiplayer.get_unique_id())
+
 
 func _on_join_button_pressed() -> void:
 	hide()
 	
-	enet_peer.create_client(\"localhost\", PORT)
+	enet_peer.create_client(ADDRES_ENTRY.text, PORT)
 	multiplayer.multiplayer_peer = enet_peer 
 
 
 func _add_player(peer_id: int) -> void:
-	var player = PLAYER.instantiate()
-	player.name = str(peer_id)
-	GAMEPLAY_SCENE.add_child(player)
+	var player_node = PLAYER_NODE.instantiate()
+	player_node.name = str(peer_id)
+	GAMEPLAY_SCENE.add_child(player_node)
+
+
+func _remove_player(peer_id: int) -> void:
+	var player = get_node_or_null(str(peer_id))
+	if player: 
+		player.queue_free()
 "
 
 [node name="gameplay_scene" type="Node3D"]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://bm21j0yy7e05n")
+spawn_path = NodePath("..")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_xpbwm")
@@ -167,19 +176,7 @@ radius = 6.0
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 21, 9, -4)
 radius = 3.0
 
-[node name="player" parent="." instance=ExtResource("2_xpbwm")]
-
-[node name="hand" parent="." instance=ExtResource("4_27dq3")]
-skeleton = NodePath("../player")
-
-[node name="hand2" parent="." instance=ExtResource("4_27dq3")]
-skeleton = NodePath("../player")
-
-[node name="hand3" parent="." instance=ExtResource("4_27dq3")]
-skeleton = NodePath("../player")
-
 [node name="canvas_layer" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="main_menu" type="Panel" parent="canvas_layer"]
 anchors_preset = -1

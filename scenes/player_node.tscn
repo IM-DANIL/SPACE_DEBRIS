@@ -1,35 +1,40 @@
-[gd_scene load_steps=4 format=3 uid="uid://dyrsuciwvjmd8"]
+[gd_scene load_steps=5 format=3 uid="uid://bm21j0yy7e05n"]
 
 [ext_resource type="PackedScene" uid="uid://cein5x4bhedug" path="res://scenes/player.tscn" id="1_4m5hh"]
-[ext_resource type="PackedScene" uid="uid://b17yo3dmfpwlh" path="res://scenes/hand.tscn" id="2_cvrci"]
+[ext_resource type="Script" uid="uid://bsbsqyg3jiqs5" path="res://scripts/player_node.gd" id="1_cvrci"]
+[ext_resource type="PackedScene" uid="uid://b17yo3dmfpwlh" path="res://scenes/hand.tscn" id="2_0upji"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0upji"]
-properties/0/path = NodePath("../player:position")
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cvrci"]
+properties/0/path = NodePath("player:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("../player/camera_node:rotation")
+properties/1/path = NodePath("player/camera_node:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath("../left:position")
+properties/2/path = NodePath("left_hand:position")
 properties/2/spawn = true
 properties/2/replication_mode = 1
-properties/3/path = NodePath(".:position")
+properties/3/path = NodePath("right_hand:position")
 properties/3/spawn = true
 properties/3/replication_mode = 1
+properties/4/path = NodePath("left_hand:rotation")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("right_hand:rotation")
+properties/5/spawn = true
+properties/5/replication_mode = 1
 
 [node name="player_node" type="Node3D"]
+script = ExtResource("1_cvrci")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-root_path = NodePath("../player")
-replication_config = SubResource("SceneReplicationConfig_0upji")
+replication_config = SubResource("SceneReplicationConfig_cvrci")
 
 [node name="player" parent="." instance=ExtResource("1_4m5hh")]
 
-[node name="left" parent="." instance=ExtResource("2_cvrci")]
-skeleton = NodePath("../player")
+[node name="left_hand" parent="." instance=ExtResource("2_0upji")]
 IS_LEFT = true
 
-[node name="right" parent="." instance=ExtResource("2_cvrci")]
-skeleton = NodePath("../player")
+[node name="right_hand" parent="." instance=ExtResource("2_0upji")]
 
 [editable path="player"]

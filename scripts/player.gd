@@ -1,10 +1,9 @@
 class_name Player
 extends CharacterBody3D
-@onready var PLAYER_NODE: Node3D = $".."
 @onready var HANDS_RAYCAST: RayCast3D = $camera_node/neck/Camera/RayCast
-@export var AVG_POINT: MeshInstance3D #Testing AVG_POINT
 @onready var CAMERA_NODE: Node3D = $camera_node
 
+var is_multiplayer: bool = false
 
 @export var PARAMETERS: Dictionary = {
 	"SPEED": 5.0,
@@ -21,16 +20,12 @@ var RIGHT_HAND: Dictionary = {
 	"IS_PULL": false
 }
 
-#func _enter_tree() -> void:
-	#set_multiplayer_authority(str(name).to_int()) #Testing multiplayer
-
-
 func _ready() -> void:
 	_update_hand_raycast(PARAMETERS["MAX_PULL_DISTANCE"])
 
 
 func _physics_process(delta: float) -> void:
-	if not is_multiplayer_authority(): return #Testing multiplayer
+	if not is_multiplayer: return
 	
 	if LEFT_HAND["IS_PULL"] or RIGHT_HAND["IS_PULL"]:
 		_handle_pull(delta)
@@ -39,6 +34,8 @@ func _physics_process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not is_multiplayer: return
+	
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click"): _start_pull_hand()
 		if event.is_action_pressed("right_click"): _start_pull_hand(false)
@@ -58,8 +55,6 @@ func _handle_pull(_delta: float) -> void:
 	
 	if active_hands > 0:
 		avg_pull_point /= active_hands
-		if AVG_POINT: #Testing AVG_POINT
-			AVG_POINT.global_position =  avg_pull_point
 	var direction_to_target = (avg_pull_point - global_position).normalized()
 	var distance = global_position.distance_to(avg_pull_point)
 	
