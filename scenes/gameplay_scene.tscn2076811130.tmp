@@ -1,8 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://bsmjar5ytjidp"]
+[gd_scene load_steps=12 format=3 uid="uid://bsmjar5ytjidp"]
 
 [ext_resource type="Texture2D" uid="uid://bxpsm1lv87ady" path="res://assets/texture_01.png" id="1_01stm"]
-[ext_resource type="PackedScene" uid="uid://cein5x4bhedug" path="res://scenes/player.tscn" id="2_xpbwm"]
-[ext_resource type="PackedScene" uid="uid://b17yo3dmfpwlh" path="res://scenes/hand.tscn" id="4_27dq3"]
+[ext_resource type="PackedScene" uid="uid://cein5x4bhedug" path="res://scenes/player.tscn" id="2_b2a1o"]
+[ext_resource type="PackedScene" uid="uid://b17yo3dmfpwlh" path="res://scenes/hand.tscn" id="3_xpbwm"]
+[ext_resource type="Texture2D" uid="uid://banmw4sgpcber" path="res://assets/texture_03.png" id="4_mvhas"]
+[ext_resource type="Shader" uid="uid://bxhf31ymwt7jx" path="res://shaders/avg_point_shader.gdshader" id="5_27dq3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_01stm"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -21,46 +23,20 @@ glow_enabled = true
 albedo_texture = ExtResource("1_01stm")
 uv1_triplanar = true
 
-[sub_resource type="GDScript" id="GDScript_mvhas"]
-resource_name = "main_menu"
-script/source = "extends Panel
-@onready var GAMEPLAY_SCENE: Node3D = $\"../..\"
-@onready var ADDRES_ENTRY: LineEdit = $MarginContainer/VBoxContainer/addres_entry
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1126i"]
+render_priority = 0
+shader = ExtResource("5_27dq3")
+shader_parameter/albedo_texture = ExtResource("4_mvhas")
+shader_parameter/alpha = 0.25
 
-const PLAYER: PackedScene = preload(\"res://scenes/player.tscn\")
-const PORT: int = 9999
-var enet_peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-
-func _on_host_button_pressed() -> void:
-	hide()
-	
-	enet_peer.create_server(PORT)
-	multiplayer.multiplayer_peer = enet_peer 
-	multiplayer.peer_connected.connect(_add_player)
-	_add_player(multiplayer.get_unique_id())
-
-func _on_join_button_pressed() -> void:
-	hide()
-	
-	enet_peer.create_client(\"localhost\", PORT)
-	multiplayer.multiplayer_peer = enet_peer 
-
-
-func _add_player(peer_id: int) -> void:
-	var player = PLAYER.instantiate()
-	player.name = str(peer_id)
-	GAMEPLAY_SCENE.add_child(player)
-"
+[sub_resource type="SphereMesh" id="SphereMesh_cd025"]
 
 [node name="gameplay_scene" type="Node3D"]
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_xpbwm")
 
 [node name="level" type="CSGCombiner3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 material_override = SubResource("StandardMaterial3D_b2a1o")
 calculate_tangents = false
 use_collision = true
@@ -167,66 +143,22 @@ radius = 6.0
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 21, 9, -4)
 radius = 3.0
 
-[node name="player" parent="." instance=ExtResource("2_xpbwm")]
+[node name="player" parent="." instance=ExtResource("2_b2a1o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+PARAMETERS = {
+"MAX_PULL_DISTANCE": 5.0,
+"PULL_MULTIP": 2.0,
+"PULL_SPEED": 10.0,
+"SPEED": 5.0
+}
 
-[node name="hand" parent="." instance=ExtResource("4_27dq3")]
-skeleton = NodePath("../player")
+[node name="left_hand" parent="." instance=ExtResource("3_xpbwm")]
+IS_LEFT = true
 
-[node name="hand2" parent="." instance=ExtResource("4_27dq3")]
-skeleton = NodePath("../player")
+[node name="right_hand" parent="." instance=ExtResource("3_xpbwm")]
 
-[node name="hand3" parent="." instance=ExtResource("4_27dq3")]
-skeleton = NodePath("../player")
-
-[node name="canvas_layer" type="CanvasLayer" parent="."]
+[node name="AVG_point" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 visible = false
-
-[node name="main_menu" type="Panel" parent="canvas_layer"]
-anchors_preset = -1
-anchor_left = 0.330469
-anchor_top = 0.330556
-anchor_right = 0.669531
-anchor_bottom = 0.669444
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-script = SubResource("GDScript_mvhas")
-metadata/_edit_use_anchors_ = true
-
-[node name="MarginContainer" type="MarginContainer" parent="canvas_layer/main_menu"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="VBoxContainer" type="VBoxContainer" parent="canvas_layer/main_menu/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="Label" type="Label" parent="canvas_layer/main_menu/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Main menu."
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="host_button" type="Button" parent="canvas_layer/main_menu/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Host"
-
-[node name="join_button" type="Button" parent="canvas_layer/main_menu/MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Join"
-
-[node name="addres_entry" type="LineEdit" parent="canvas_layer/main_menu/MarginContainer/VBoxContainer"]
-layout_mode = 2
-placeholder_text = "Enter Addres"
-alignment = 1
-
-[connection signal="pressed" from="canvas_layer/main_menu/MarginContainer/VBoxContainer/host_button" to="canvas_layer/main_menu" method="_on_host_button_pressed"]
-[connection signal="pressed" from="canvas_layer/main_menu/MarginContainer/VBoxContainer/join_button" to="canvas_layer/main_menu" method="_on_join_button_pressed"]
+material_override = SubResource("ShaderMaterial_1126i")
+mesh = SubResource("SphereMesh_cd025")

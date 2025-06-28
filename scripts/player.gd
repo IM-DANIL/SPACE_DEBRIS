@@ -1,14 +1,13 @@
 class_name Player
 extends CharacterBody3D
+@onready var PLAYER_NODE: Node3D = $".."
 @onready var HANDS_RAYCAST: RayCast3D = $camera_node/neck/Camera/RayCast
-@onready var FRICTION_AREA: Area3D = $friction_area
 @export var AVG_POINT: MeshInstance3D #Testing AVG_POINT
+@onready var CAMERA_NODE: Node3D = $camera_node
 
-var is_friction: bool = false
 
 @export var PARAMETERS: Dictionary = {
-	"MAX_SPEED": 5.0,
-	"MIN_SPEED": 1.5,
+	"SPEED": 5.0,
 	"MAX_PULL_DISTANCE": 5.0, 
 	"PULL_SPEED": 10.0,
 	"PULL_MULTIP": 2.0
@@ -22,15 +21,20 @@ var RIGHT_HAND: Dictionary = {
 	"IS_PULL": false
 }
 
+#func _enter_tree() -> void:
+	#set_multiplayer_authority(str(name).to_int()) #Testing multiplayer
+
 
 func _ready() -> void:
-	_check_hands()
 	_update_hand_raycast(PARAMETERS["MAX_PULL_DISTANCE"])
 
 
 func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority(): return #Testing multiplayer
+	
 	if LEFT_HAND["IS_PULL"] or RIGHT_HAND["IS_PULL"]:
 		_handle_pull(delta)
+	_speed_movement(delta)
 	move_and_slide()
 
 
@@ -42,7 +46,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.is_action_released("right_click"): _end_pull_hand(false)
 
 
-func _handle_pull(delta: float) -> void:
+func _handle_pull(_delta: float) -> void:
 	var avg_pull_point: Vector3 = Vector3.ZERO
 	var active_hands = 0
 	if LEFT_HAND["IS_PULL"]:
@@ -61,40 +65,36 @@ func _handle_pull(delta: float) -> void:
 	
 	var current_speed = PARAMETERS["PULL_SPEED"] * (PARAMETERS["PULL_MULTIP"] if active_hands == 2 else 1.0)
 	velocity = direction_to_target * current_speed * clamp(distance, 0, PARAMETERS["MAX_PULL_DISTANCE"])
-	velocity = velocity.limit_length(PARAMETERS["MAX_SPEED"])
 
 
-func _friction(delta: float) -> void:
-	pass
+func _speed_movement(_delta: float) -> void:
+	velocity = velocity.limit_length(PARAMETERS["SPEED"])
 
 
 func _start_pull_hand(is_left: bool = true) -> void:
 	if HANDS_RAYCAST.is_colliding():
 		if _hands_raycast_colliding():
-			if is_left: 
-				LEFT_HAND["NODE"].global_position = HANDS_RAYCAST.get_collision_point()
-				LEFT_HAND["IS_PULL"] = true
-				LEFT_HAND["NODE"].IS_PULL = LEFT_HAND["IS_PULL"]
+			if is_left:
+				if LEFT_HAND["NODE"]:
+					LEFT_HAND["NODE"].global_position = HANDS_RAYCAST.get_collision_point()
+					LEFT_HAND["IS_PULL"] = true
+					LEFT_HAND["NODE"].IS_PULL = LEFT_HAND["IS_PULL"]
 			else: 
-				RIGHT_HAND["NODE"].global_position = HANDS_RAYCAST.get_collision_point()
-				RIGHT_HAND["IS_PULL"] = true
-				RIGHT_HAND["NODE"].IS_PULL = RIGHT_HAND["IS_PULL"]
+				if RIGHT_HAND["NODE"]:
+					RIGHT_HAND["NODE"].global_position = HANDS_RAYCAST.get_collision_point()
+					RIGHT_HAND["IS_PULL"] = true
+					RIGHT_HAND["NODE"].IS_PULL = RIGHT_HAND["IS_PULL"]
 
 
 func _end_pull_hand(is_left: bool = true) -> void:
 	if is_left: 
-		LEFT_HAND["IS_PULL"] = false
-		LEFT_HAND["NODE"].IS_PULL = LEFT_HAND["IS_PULL"]
+		if LEFT_HAND["NODE"]:
+			LEFT_HAND["IS_PULL"] = false
+			LEFT_HAND["NODE"].IS_PULL = LEFT_HAND["IS_PULL"]
 	else: 
-		RIGHT_HAND["IS_PULL"] = false
-		RIGHT_HAND["NODE"].IS_PULL = RIGHT_HAND["IS_PULL"]
-
-
-func _check_hands() -> void:
-	if get_tree().has_group("hand"):
-		for hand in get_tree().get_nodes_in_group("hand"):
-			if hand.IS_LEFT: LEFT_HAND["NODE"] = hand
-			else: RIGHT_HAND["NODE"] = hand
+		if RIGHT_HAND["NODE"]:
+			RIGHT_HAND["IS_PULL"] = false
+			RIGHT_HAND["NODE"].IS_PULL = RIGHT_HAND["IS_PULL"]
 
 
 func _hands_raycast_colliding() -> bool:
@@ -104,11 +104,3 @@ func _hands_raycast_colliding() -> bool:
 
 func _update_hand_raycast(lenght_raycast: float) -> void:
 	HANDS_RAYCAST.target_position.z = -lenght_raycast
-
-
-func _on_friction_area_body_shape_entered(_body_rid: RID, _body: Node3D, _body_shape_index: int, _local_shape_index: int) -> void:
-	is_friction = true
-
-
-func _on_friction_area_body_shape_exited(_body_rid: RID, _body: Node3D, _body_shape_index: int, _local_shape_index: int) -> void:
-	is_friction = false

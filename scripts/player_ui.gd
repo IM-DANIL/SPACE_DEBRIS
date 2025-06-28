@@ -5,7 +5,7 @@ extends Control
 @export var BRIGHT_COLOR_AIM: Color
 @export var DIM_COLOR_AIM: Color
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	_check_pull_hand()
 
 

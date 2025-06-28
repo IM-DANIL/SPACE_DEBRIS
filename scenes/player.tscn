@@ -1,13 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://cein5x4bhedug"]
+[gd_scene load_steps=9 format=3 uid="uid://cein5x4bhedug"]
 
 [ext_resource type="Script" uid="uid://cta80imvi67b5" path="res://scripts/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://3p454ckdsm44" path="res://scripts/camera_node.gd" id="2_g2els"]
 [ext_resource type="Texture2D" uid="uid://dk3cr4pc74pi0" path="res://assets/texture_4.png" id="2_qhqgy"]
 [ext_resource type="Script" uid="uid://cnmj0m0g20bpe" path="res://scripts/marker_pos.gd" id="4_dqkch"]
 [ext_resource type="Script" uid="uid://c4wxquy3524vc" path="res://scripts/player_ui.gd" id="5_qlg0r"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_qlg0r"]
-radius = 0.55
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_u8vuu"]
 
@@ -18,13 +15,9 @@ uv1_triplanar = true
 [sub_resource type="SphereMesh" id="SphereMesh_u8vuu"]
 material = SubResource("StandardMaterial3D_dqkch")
 
-[node name="player" type="CharacterBody3D"]
+[node name="player" type="CharacterBody3D" groups=["player"]]
+collision_layer = 2
 script = ExtResource("1_3vyb7")
-
-[node name="friction_area" type="Area3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="friction_area"]
-shape = SubResource("SphereShape3D_qlg0r")
 
 [node name="CollisionShape" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_u8vuu")
@@ -87,6 +80,3 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0.196078)
-
-[connection signal="body_shape_entered" from="friction_area" to="." method="_on_friction_area_body_shape_entered"]
-[connection signal="body_shape_exited" from="friction_area" to="." method="_on_friction_area_body_shape_exited"]
