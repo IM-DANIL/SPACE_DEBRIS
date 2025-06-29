@@ -4,9 +4,9 @@ var POS: Marker3D = null
 var PLAYER: CharacterBody3D = null
 
 var IS_PULL: bool = false
+var IS_PICK: bool = false
 @export var IS_LEFT: bool = false
 @export var SPEED_HAND: float = 5.0
-
 
 func _ready() -> void:
 	_check_player()
@@ -25,21 +25,16 @@ func _hand_move(delta: float) -> void:
 
 
 func _check_player() -> void:
-	for player in get_parent().get_children():
-		if player.is_in_group("player"):
-			PLAYER = player
+	for _player in get_parent().get_children():
+		if _player.is_in_group("player"):
+			PLAYER = _player
 
 
 func _check_markers() -> void:
-	if get_tree().has_group("hands_pos"):
-		for marker in get_tree().get_nodes_in_group("hands_pos"):
-			if not marker.IS_ASSIGNED:
-				if marker.IS_LEFT and IS_LEFT: 
-					POS = marker
-					marker.IS_ASSIGNED = true
-				elif !marker.IS_LEFT and !IS_LEFT: 
-					POS = marker
-					marker.IS_ASSIGNED = true
+	if PLAYER:
+		for _pos in PLAYER.HANDS_NODE.get_children():
+			if IS_LEFT and _pos.IS_LEFT: POS = _pos
+			elif not IS_LEFT and not _pos.IS_LEFT: POS = _pos
 
 
 func _check_hands() -> void:

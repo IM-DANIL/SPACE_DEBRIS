@@ -1,0 +1,85 @@
+[gd_scene load_steps=14 format=3 uid="uid://befxe5hykxp3q"]
+
+[ext_resource type="Texture2D" uid="uid://dnvg4txeww0wy" path="res://assets/texture_06.png" id="1_ght1b"]
+[ext_resource type="Script" uid="uid://3i1ueh2e4fbt" path="res://scripts/cleaner.gd" id="1_lmdea"]
+[ext_resource type="Texture2D" uid="uid://dk3cr4pc74pi0" path="res://assets/texture_4.png" id="2_rjtgh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rjtgh"]
+albedo_texture = ExtResource("1_ght1b")
+uv1_triplanar = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_lmdea"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ght1b"]
+albedo_texture = ExtResource("1_ght1b")
+uv1_triplanar = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rjtgh"]
+top_radius = 0.25
+bottom_radius = 0.3
+height = 1.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ght1b"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ght1b"]
+height = 0.5
+radius = 0.25
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_lmdea"]
+height = 0.5
+radius = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lmdea"]
+albedo_texture = ExtResource("2_rjtgh")
+uv1_triplanar = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_n8v1i"]
+top_radius = 0.125
+bottom_radius = 0.125
+height = 0.5
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rjtgh"]
+radius = 0.2
+height = 0.4
+
+[node name="cleaner" type="CharacterBody3D"]
+script = ExtResource("1_lmdea")
+
+[node name="body_mesh" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_rjtgh")
+mesh = SubResource("SphereMesh_lmdea")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="body_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("StandardMaterial3D_ght1b")
+mesh = SubResource("CylinderMesh_rjtgh")
+
+[node name="Collision_sphere" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_ght1b")
+
+[node name="Collision_cilindre" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+shape = SubResource("CylinderShape3D_ght1b")
+
+[node name="Collision_pipe" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+shape = SubResource("CylinderShape3D_lmdea")
+
+[node name="pipe_marker" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="pipe" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+material_override = SubResource("StandardMaterial3D_lmdea")
+mesh = SubResource("CylinderMesh_n8v1i")
+
+[node name="pipe_area" type="Area3D" parent="pipe"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 5
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="pipe/pipe_area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+shape = SubResource("CapsuleShape3D_rjtgh")
+
+[connection signal="area_entered" from="pipe/pipe_area" to="." method="_on_pipe_area_entered"]

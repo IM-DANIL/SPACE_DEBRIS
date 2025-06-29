@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://bsmjar5ytjidp"]
+[gd_scene load_steps=8 format=3 uid="uid://bsmjar5ytjidp"]
 
-[ext_resource type="Texture2D" uid="uid://bxpsm1lv87ady" path="res://assets/texture_01.png" id="1_01stm"]
+[ext_resource type="Texture2D" uid="uid://bxpsm1lv87ady" path="res://assets/texture_01.png" id="1_fgy1i"]
+[ext_resource type="PackedScene" uid="uid://cfmh2c4lf3bs1" path="res://scenes/default_object.tscn" id="2_l22bd"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_01stm"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -16,7 +17,7 @@ tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b2a1o"]
-albedo_texture = ExtResource("1_01stm")
+albedo_texture = ExtResource("1_fgy1i")
 uv1_triplanar = true
 
 [sub_resource type="GDScript" id="GDScript_mvhas"]
@@ -25,7 +26,7 @@ script/source = "extends Panel
 @onready var GAMEPLAY_SCENE: Node3D = $\"../..\"
 @onready var ADDRES_ENTRY: LineEdit = $MarginContainer/VBoxContainer/addres_entry
 
-const PLAYER_NODE: PackedScene = preload(\"res://scenes/player_node.tscn\")
+const PLAYER_NODE: PackedScene = preload(\"res://scenes/node_player.tscn\")
 const PORT: int = 135
 var enet_peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 
@@ -224,6 +225,9 @@ text = "Join"
 layout_mode = 2
 placeholder_text = "Enter Addres"
 alignment = 1
+
+[node name="default_object" parent="." instance=ExtResource("2_l22bd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [connection signal="pressed" from="canvas_layer/main_menu/MarginContainer/VBoxContainer/host_button" to="canvas_layer/main_menu" method="_on_host_button_pressed"]
 [connection signal="pressed" from="canvas_layer/main_menu/MarginContainer/VBoxContainer/join_button" to="canvas_layer/main_menu" method="_on_join_button_pressed"]

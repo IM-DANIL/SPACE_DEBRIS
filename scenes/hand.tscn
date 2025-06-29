@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://b17yo3dmfpwlh"]
+[gd_scene load_steps=7 format=3 uid="uid://b17yo3dmfpwlh"]
 
 [ext_resource type="Texture2D" uid="uid://dk3cr4pc74pi0" path="res://assets/texture_4.png" id="1_eyfoh"]
 [ext_resource type="Shader" uid="uid://bxhf31ymwt7jx" path="res://shaders/avg_point_shader.gdshader" id="1_k7pjy"]
@@ -12,8 +12,17 @@ shader_parameter/alpha = 0.7
 
 [sub_resource type="SphereMesh" id="SphereMesh_1gd3j"]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_k7pjy"]
+
 [node name="hand" type="MeshInstance3D" groups=["hand"]]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 material_override = SubResource("ShaderMaterial_m1v21")
 mesh = SubResource("SphereMesh_1gd3j")
 script = ExtResource("2_cmdsa")
+
+[node name="hand_area" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape" type="CollisionShape3D" parent="hand_area"]
+shape = SubResource("SphereShape3D_k7pjy")

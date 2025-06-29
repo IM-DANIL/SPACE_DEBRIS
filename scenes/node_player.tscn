@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://bm21j0yy7e05n"]
 
-[ext_resource type="PackedScene" uid="uid://cein5x4bhedug" path="res://scenes/player.tscn" id="1_4m5hh"]
-[ext_resource type="Script" uid="uid://bsbsqyg3jiqs5" path="res://scripts/player_node.gd" id="1_cvrci"]
-[ext_resource type="PackedScene" uid="uid://b17yo3dmfpwlh" path="res://scenes/hand.tscn" id="2_0upji"]
+[ext_resource type="Script" uid="uid://bsbsqyg3jiqs5" path="res://scripts/player_node.gd" id="1_vnn0i"]
+[ext_resource type="PackedScene" uid="uid://cein5x4bhedug" path="res://scenes/player.tscn" id="2_5dqp3"]
+[ext_resource type="PackedScene" uid="uid://b17yo3dmfpwlh" path="res://scenes/hand.tscn" id="3_lsbel"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cvrci"]
 properties/0/path = NodePath("player:position")
@@ -24,17 +24,17 @@ properties/5/path = NodePath("right_hand:rotation")
 properties/5/spawn = true
 properties/5/replication_mode = 1
 
-[node name="player_node" type="Node3D"]
-script = ExtResource("1_cvrci")
+[node name="node_player" type="Node3D"]
+script = ExtResource("1_vnn0i")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_cvrci")
 
-[node name="player" parent="." instance=ExtResource("1_4m5hh")]
+[node name="player" parent="." instance=ExtResource("2_5dqp3")]
 
-[node name="left_hand" parent="." instance=ExtResource("2_0upji")]
+[node name="left_hand" parent="." instance=ExtResource("3_lsbel")]
 IS_LEFT = true
 
-[node name="right_hand" parent="." instance=ExtResource("2_0upji")]
+[node name="right_hand" parent="." instance=ExtResource("3_lsbel")]
 
 [editable path="player"]

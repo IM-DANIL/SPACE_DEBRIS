@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://cfmh2c4lf3bs1"]
+
+[ext_resource type="Script" uid="uid://dhcds5h61xysj" path="res://scripts/default_item.gd" id="1_5a1lk"]
+[ext_resource type="Texture2D" uid="uid://dnvg4txeww0wy" path="res://assets/texture_06.png" id="1_ynib0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5a1lk"]
+albedo_texture = ExtResource("1_ynib0")
+uv1_triplanar = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_68k22"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ynib0"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_mdwxd"]
+radius = 0.249838
+
+[node name="default_object" type="RigidBody3D"]
+collision_layer = 4
+collision_mask = 5
+gravity_scale = 0.0
+can_sleep = false
+script = ExtResource("1_5a1lk")
+
+[node name="body_mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_5a1lk")
+mesh = SubResource("SphereMesh_68k22")
+
+[node name="CollisionShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("SphereShape3D_ynib0")
+
+[node name="object_area" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="object_area"]
+shape = SubResource("SphereShape3D_mdwxd")
+
+[connection signal="area_entered" from="object_area" to="." method="_on_object_area_entered"]
