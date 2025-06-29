@@ -5,7 +5,7 @@ extends CharacterBody3D
 @onready var HANDS_NODE: Node3D = $camera_node/hands_node
 
 
-var is_multiplayer: bool = false
+var IS_MULTIPLAYER: bool = false
 
 @export var PARAMETERS: Dictionary = {
 	"CURRENT_SPEED": 0.0,
@@ -32,7 +32,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if not is_multiplayer: return
+	if not IS_MULTIPLAYER: return
 	
 	_speed_movement(delta)
 	if LEFT_HAND["IS_PULL"] or RIGHT_HAND["IS_PULL"]:
@@ -41,7 +41,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not is_multiplayer: return
+	if not IS_MULTIPLAYER: return
 	
 	if event is InputEventMouseButton:
 		if event.is_action_pressed("left_click"): _start_pull_hand()
@@ -104,8 +104,8 @@ func _start_pull_hand(is_left: bool = true) -> void:
 func _end_pull_hand(is_left: bool = true) -> void:
 	if is_left: 
 		if LEFT_HAND["NODE"]:
-			LEFT_HAND["IS_PULL"] = false
-			LEFT_HAND["NODE"].IS_PULL = LEFT_HAND["IS_PULL"]
+				LEFT_HAND["IS_PULL"] = false
+				LEFT_HAND["NODE"].IS_PULL = LEFT_HAND["IS_PULL"]
 	else: 
 		if RIGHT_HAND["NODE"]:
 			RIGHT_HAND["IS_PULL"] = false

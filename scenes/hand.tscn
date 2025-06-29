@@ -26,3 +26,7 @@ collision_mask = 4
 
 [node name="CollisionShape" type="CollisionShape3D" parent="hand_area"]
 shape = SubResource("SphereShape3D_k7pjy")
+disabled = true
+
+[node name="pick_timer" type="Timer" parent="."]
+one_shot = true

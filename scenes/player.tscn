@@ -42,7 +42,7 @@ fov = 90.0
 
 [node name="RayCast" type="RayCast3D" parent="camera_node/neck/Camera"]
 target_position = Vector3(0, 0, -10)
-collision_mask = 7
+collision_mask = 5
 
 [node name="hands_node" type="Node3D" parent="camera_node"]
 

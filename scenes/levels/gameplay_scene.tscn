@@ -229,5 +229,11 @@ alignment = 1
 [node name="default_object" parent="." instance=ExtResource("2_l22bd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
+[node name="default_object2" parent="." instance=ExtResource("2_l22bd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2, 0)
+
+[node name="default_object3" parent="." instance=ExtResource("2_l22bd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2, -3)
+
 [connection signal="pressed" from="canvas_layer/main_menu/MarginContainer/VBoxContainer/host_button" to="canvas_layer/main_menu" method="_on_host_button_pressed"]
 [connection signal="pressed" from="canvas_layer/main_menu/MarginContainer/VBoxContainer/join_button" to="canvas_layer/main_menu" method="_on_join_button_pressed"]

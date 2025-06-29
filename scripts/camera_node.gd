@@ -4,13 +4,13 @@ extends Node3D
 @onready var NECK: Node3D = $neck
 @onready var CAMERA: Camera3D = $neck/Camera
 
-var is_multiplayer: bool = false
+var IS_MULTIPLAYER: bool = false
 
 @export var SENSITIVITY: float = 0.003
 @export var SPEED_ROTATION: float = 3.0
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not is_multiplayer: return
+	if not IS_MULTIPLAYER: return
 	
 	_camera_movement(event)
 
