@@ -1,63 +1,84 @@
-[gd_scene load_steps=9 format=3 uid="uid://cein5x4bhedug"]
+[gd_scene load_steps=12 format=3 uid="uid://dsswvstdg7h0x"]
 
-[ext_resource type="Script" uid="uid://cta80imvi67b5" path="res://scripts/player.gd" id="1_3vyb7"]
-[ext_resource type="Script" uid="uid://3p454ckdsm44" path="res://scripts/camera_node.gd" id="2_g2els"]
-[ext_resource type="Texture2D" uid="uid://dk3cr4pc74pi0" path="res://assets/texture_4.png" id="2_qhqgy"]
-[ext_resource type="Script" uid="uid://cnmj0m0g20bpe" path="res://scripts/marker_pos.gd" id="4_dqkch"]
-[ext_resource type="Script" uid="uid://c4wxquy3524vc" path="res://scripts/player_ui.gd" id="5_qlg0r"]
+[ext_resource type="Texture2D" uid="uid://dk3cr4pc74pi0" path="res://assets/texture_4.png" id="1_l6tho"]
+[ext_resource type="Script" uid="uid://bivrod8gfxk35" path="res://scripts/player_script.gd" id="1_oc1kf"]
+[ext_resource type="PackedScene" uid="uid://cfajfe4sbt0k7" path="res://scenes/hand.tscn" id="2_s551d"]
+[ext_resource type="Script" uid="uid://8topsfm0vkq2" path="res://scripts/camera_node.gd" id="3_0mr0g"]
+[ext_resource type="Texture2D" uid="uid://cnfrlwxbdcoen" path="res://assets/aim_point.png" id="3_yjax8"]
+[ext_resource type="Script" uid="uid://c4wxquy3524vc" path="res://scripts/player_ui.gd" id="5_v7tvf"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_u8vuu"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_v7tvf"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dqkch"]
-albedo_texture = ExtResource("2_qhqgy")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4flbx"]
+cull_mode = 1
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.05
+proximity_fade_enabled = true
+distance_fade_min_distance = 329.56
+distance_fade_max_distance = 235.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yjax8"]
+next_pass = SubResource("StandardMaterial3D_4flbx")
+albedo_texture = ExtResource("1_l6tho")
 uv1_triplanar = true
 
-[sub_resource type="SphereMesh" id="SphereMesh_u8vuu"]
-material = SubResource("StandardMaterial3D_dqkch")
+[sub_resource type="SphereMesh" id="SphereMesh_oc1kf"]
+resource_local_to_scene = true
 
-[node name="player" type="CharacterBody3D" groups=["player"]]
-script = ExtResource("1_3vyb7")
+[sub_resource type="SphereMesh" id="SphereMesh_0mr0g"]
+radius = 0.25
+height = 0.5
+
+[node name="player" type="CharacterBody3D" node_paths=PackedStringArray("LEFT_HAND", "RIGHT_HAND")]
+script = ExtResource("1_oc1kf")
+LEFT_HAND = NodePath("hands_node/left")
+RIGHT_HAND = NodePath("hands_node/right")
 
 [node name="CollisionShape" type="CollisionShape3D" parent="."]
-shape = SubResource("SphereShape3D_u8vuu")
+shape = SubResource("SphereShape3D_v7tvf")
 
-[node name="body_mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_u8vuu")
+[node name="model_mesh" type="CSGCombiner3D" parent="."]
+material_override = SubResource("StandardMaterial3D_yjax8")
+visibility_range_begin = 0.1
 
-[node name="MeshInstance" type="MeshInstance3D" parent="body_mesh"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, -0.435)
-layers = 2
-visibility_range_begin = 0.5
-visibility_range_fade_mode = 1
-mesh = SubResource("SphereMesh_u8vuu")
-skeleton = NodePath("../..")
+[node name="CSGMesh3D" type="CSGMesh3D" parent="model_mesh"]
+mesh = SubResource("SphereMesh_oc1kf")
 
-[node name="camera_node" type="Node3D" parent="."]
-script = ExtResource("2_g2els")
+[node name="CSGMesh3D2" type="CSGMesh3D" parent="model_mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.4)
+mesh = SubResource("SphereMesh_0mr0g")
 
-[node name="neck" type="Node3D" parent="camera_node"]
+[node name="camera_node" type="Node3D" parent="." node_paths=PackedStringArray("PLAYER", "PLAYER_MODEL")]
+script = ExtResource("3_0mr0g")
+PLAYER = NodePath("..")
+PLAYER_MODEL = NodePath("../model_mesh")
 
-[node name="Camera" type="Camera3D" parent="camera_node/neck"]
+[node name="camera" type="Camera3D" parent="camera_node"]
 fov = 90.0
 
-[node name="RayCast" type="RayCast3D" parent="camera_node/neck/Camera"]
+[node name="hands_raycast" type="RayCast3D" parent="camera_node/camera"]
 target_position = Vector3(0, 0, -10)
-collision_mask = 5
 
-[node name="hands_node" type="Node3D" parent="camera_node"]
+[node name="left_pos" type="Marker3D" parent="camera_node/camera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, -0.4, -0.5)
 
-[node name="left_pos" type="Marker3D" parent="camera_node/hands_node" groups=["hands_pos"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -1)
-script = ExtResource("4_dqkch")
-IS_LEFT = true
+[node name="right_pos" type="Marker3D" parent="camera_node/camera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, -0.4, -0.5)
 
-[node name="right_pos" type="Marker3D" parent="camera_node/hands_node" groups=["hands_pos"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -1)
-script = ExtResource("4_dqkch")
+[node name="hands_node" type="CanvasLayer" parent="."]
 
-[node name="canvas_layer" type="CanvasLayer" parent="."]
+[node name="right" parent="hands_node" node_paths=PackedStringArray("HAND_POS") instance=ExtResource("2_s551d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+HAND_POS = NodePath("../../camera_node/camera/right_pos")
 
-[node name="player_UI" type="Control" parent="canvas_layer"]
+[node name="left" parent="hands_node" node_paths=PackedStringArray("HAND_POS") instance=ExtResource("2_s551d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+HAND_POS = NodePath("../../camera_node/camera/left_pos")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="player_UI" type="Control" parent="UI" node_paths=PackedStringArray("HANDS_RAYCAST")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -65,11 +86,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("5_qlg0r")
+script = ExtResource("5_v7tvf")
+HANDS_RAYCAST = NodePath("../../camera_node/camera/hands_raycast")
 BRIGHT_COLOR_AIM = Color(1, 1, 1, 0.509804)
 DIM_COLOR_AIM = Color(1, 1, 1, 0.0784314)
 
-[node name="aim_point" type="ColorRect" parent="canvas_layer/player_UI"]
+[node name="aim_point" type="TextureRect" parent="UI/player_UI"]
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 1
 anchors_preset = 8
@@ -77,7 +99,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(1, 1, 1, 0.196078)
+texture = ExtResource("3_yjax8")
+expand_mode = 1

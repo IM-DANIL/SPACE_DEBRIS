@@ -1,29 +1,24 @@
-class_name CameraNode
 extends Node3D
-@onready var PLAYER: CharacterBody3D = $".."
-@onready var NECK: Node3D = $neck
-@onready var CAMERA: Camera3D = $neck/Camera
+@onready var CAMERA: Camera3D = $camera
+@export var PLAYER: Player
+@export var PLAYER_MODEL: Node3D
 
-var IS_MULTIPLAYER: bool = false
+@export var SENS: float = 0.003
 
-@export var SENSITIVITY: float = 0.003
-@export var SPEED_ROTATION: float = 3.0
+func _ready() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not IS_MULTIPLAYER: return
-	
-	_camera_movement(event)
-
-
-func _camera_movement(event: InputEvent) -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
-			rotate_x(-event.relative.y * SENSITIVITY) 
+			rotate_x(-event.relative.y * SENS) 
+			_rotation_model()
 			if 90 <= abs(rad_to_deg(rotation.x)) and abs(rad_to_deg(rotation.x)) <= 180:
-				PLAYER.rotate_y(event.relative.x * SENSITIVITY)
-			else: PLAYER.rotate_y(-event.relative.x * SENSITIVITY)
+				PLAYER.rotate_y(event.relative.x * SENS)
+			else: PLAYER.rotate_y(-event.relative.x * SENS)
 
 
-func update_camera() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	CAMERA.current = true
+func _rotation_model() -> void:
+	if PLAYER_MODEL:
+		PLAYER_MODEL.rotation.x = rotation.x

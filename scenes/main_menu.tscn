@@ -1,0 +1,219 @@
+[gd_scene load_steps=5 format=3 uid="uid://cd77jotsubx2o"]
+
+[ext_resource type="Script" uid="uid://b3y7eypl27rgd" path="res://scripts/main_menu.gd" id="1_l6cm7"]
+[ext_resource type="Script" uid="uid://dqxsjynu2r80k" path="res://scripts/multiplayer_ui.gd" id="2_bqqt6"]
+[ext_resource type="Script" uid="uid://bh2pvnq8340sb" path="res://scripts/server_browser.gd" id="2_ekxnf"]
+[ext_resource type="PackedScene" uid="uid://cxyiuvah5s7l8" path="res://scenes/server_info.tscn" id="3_wu84c"]
+
+[node name="main_menu" type="CanvasLayer"]
+script = ExtResource("1_l6cm7")
+
+[node name="main_UI" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="buttons_panel" type="Panel" parent="main_UI"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 193.0
+offset_top = -177.0
+offset_right = -193.0
+offset_bottom = 177.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="main_UI/buttons_panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="main_UI/buttons_panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="singlplayer_button" type="Button" parent="main_UI/buttons_panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Singlplayer"
+
+[node name="multiplayer_button" type="Button" parent="main_UI/buttons_panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Multiplayer"
+
+[node name="setting_button" type="Button" parent="main_UI/buttons_panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Setting"
+
+[node name="exit_button" type="Button" parent="main_UI/buttons_panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Exit"
+
+[node name="multiplayer_UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_bqqt6")
+
+[node name="server_browser" type="Control" parent="multiplayer_UI"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_ekxnf")
+SERVER_INFO = ExtResource("3_wu84c")
+
+[node name="broadcast_timer" type="Timer" parent="multiplayer_UI/server_browser"]
+
+[node name="buttons_panel" type="Panel" parent="multiplayer_UI"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 193.0
+offset_top = -177.0
+offset_right = -193.0
+offset_bottom = 177.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="multiplayer_UI/buttons_panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -14.0
+offset_right = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 15
+
+[node name="multiplayer_menu" type="HBoxContainer" parent="multiplayer_UI/buttons_panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="name_container" type="HBoxContainer" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="name" type="Label" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/VBoxContainer/name_container"]
+layout_mode = 2
+text = "Name:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="name_edit" type="LineEdit" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/VBoxContainer/name_container"]
+layout_mode = 2
+theme_override_constants/minimum_character_width = 12
+
+[node name="detect" type="Label" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/VBoxContainer/name_container"]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="buttons_container" type="HBoxContainer" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="host_button" type="Button" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/VBoxContainer/buttons_container"]
+layout_mode = 2
+text = "Create room"
+
+[node name="join_button" type="Button" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/VBoxContainer/buttons_container"]
+layout_mode = 2
+text = "Join room"
+
+[node name="start_button" type="Button" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/VBoxContainer/buttons_container"]
+layout_mode = 2
+text = "Start game"
+
+[node name="server_panel" type="Panel" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/server_panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="label_info" type="MarginContainer" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/server_panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 15
+
+[node name="server_label" type="HBoxContainer" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/server_panel/VBoxContainer/label_info"]
+layout_mode = 2
+alignment = 1
+
+[node name="name" type="Label" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/server_panel/VBoxContainer/label_info/server_label"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Name"
+horizontal_alignment = 1
+
+[node name="ip" type="Label" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/server_panel/VBoxContainer/label_info/server_label"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "IP"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="count" type="Label" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/server_panel/VBoxContainer/label_info/server_label"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Player count"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="join" type="Label" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/server_panel/VBoxContainer/label_info/server_label"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Join"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/server_panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/server_panel/VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[connection signal="pressed" from="main_UI/buttons_panel/MarginContainer/VBoxContainer/multiplayer_button" to="." method="_on_multiplayer_button_pressed"]
+[connection signal="pressed" from="main_UI/buttons_panel/MarginContainer/VBoxContainer/exit_button" to="." method="_on_exit_button_pressed"]
+[connection signal="timeout" from="multiplayer_UI/server_browser/broadcast_timer" to="multiplayer_UI/server_browser" method="_on_broadcast_timer_timeout"]
+[connection signal="pressed" from="multiplayer_UI/buttons_panel/MarginContainer/multiplayer_menu/VBoxContainer/buttons_container/host_button" to="multiplayer_UI" method="_on_host_button_pressed"]
