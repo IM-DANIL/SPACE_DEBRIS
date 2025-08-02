@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3 uid="uid://cfmh2c4lf3bs1"]
+
+[ext_resource type="Script" uid="uid://g0svn7ulrq0c" path="res://scripts/debris_script.gd" id="1_1ysct"]
+[ext_resource type="Texture2D" uid="uid://dnvg4txeww0wy" path="res://assets/textures/texture_06.png" id="2_fmh6o"]
+[ext_resource type="Material" uid="uid://bve0ydnggk5hd" path="res://assets/materials/outline_material.tres" id="3_5x5xt"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1ysct"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_mdwxd"]
+radius = 0.249838
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_j5p87"]
+radius = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vj5lu"]
+next_pass = ExtResource("3_5x5xt")
+albedo_texture = ExtResource("2_fmh6o")
+uv1_triplanar = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_ysj2y"]
+radius = 0.25
+height = 0.5
+radial_segments = 16
+rings = 8
+
+[node name="default_debris" type="RigidBody3D" groups=["debris"]]
+collision_layer = 4
+collision_mask = 5
+gravity_scale = 0.0
+can_sleep = false
+script = ExtResource("1_1ysct")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_1ysct")
+visibility_update_mode = 1
+
+[node name="debris_area" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="debris_area"]
+visible = false
+shape = SubResource("SphereShape3D_mdwxd")
+
+[node name="CollisionShape" type="CollisionShape3D" parent="."]
+visible = false
+shape = SubResource("SphereShape3D_j5p87")
+
+[node name="model_mesh" type="CSGCombiner3D" parent="."]
+material_override = SubResource("StandardMaterial3D_vj5lu")
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="model_mesh"]
+mesh = SubResource("SphereMesh_ysj2y")

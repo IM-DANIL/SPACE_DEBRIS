@@ -1,0 +1,96 @@
+[gd_scene load_steps=3 format=3 uid="uid://skwyexku6wag"]
+
+[ext_resource type="Script" uid="uid://cvj8dp46yp7h7" path="res://scripts/local_multiplayer_node.gd" id="1_mfv82"]
+[ext_resource type="Script" uid="uid://dqdqtm8bnd5dt" path="res://scripts/server_broadcast_script.gd" id="2_6wstf"]
+
+[node name="local_multiplayer_node" type="Control" node_paths=PackedStringArray("SERVER_BUTTON", "CLIENT_BUTTON", "CODE_EDIT", "CODE_LABEL", "INFO_LABEL")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mfv82")
+SERVER_BUTTON = NodePath("MarginContainer/VBoxContainer/server")
+CLIENT_BUTTON = NodePath("MarginContainer/VBoxContainer/VBoxContainer/client")
+CODE_EDIT = NodePath("MarginContainer/VBoxContainer/VBoxContainer/code_edit")
+CODE_LABEL = NodePath("MarginContainer/VBoxContainer/VBoxContainer/code_panel/code_label")
+INFO_LABEL = NodePath("MarginContainer/VBoxContainer/info_panel/info_label")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 145
+theme_override_constants/margin_top = 45
+theme_override_constants/margin_right = 145
+theme_override_constants/margin_bottom = 45
+
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="server" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Create room."
+icon_alignment = 1
+
+[node name="info_panel" type="Panel" parent="MarginContainer/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(110, 66)
+layout_mode = 2
+
+[node name="info_label" type="Label" parent="MarginContainer/VBoxContainer/info_panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+autowrap_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="code_edit" type="LineEdit" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/minimum_character_width = 10
+placeholder_text = "Enter game code."
+
+[node name="client" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Join room."
+icon_alignment = 1
+
+[node name="code_panel" type="Panel" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(159, 66)
+layout_mode = 2
+
+[node name="code_label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer/code_panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "SEXX"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="is_listner" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="server_broadcast" type="Node" parent="."]
+script = ExtResource("2_6wstf")
+
+[node name="broadcast_timer" type="Timer" parent="server_broadcast"]
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/server" to="." method="_on_server_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/client" to="." method="_on_client_pressed"]
+[connection signal="timeout" from="server_broadcast/broadcast_timer" to="server_broadcast" method="_on_broadcast_timer_timeout"]

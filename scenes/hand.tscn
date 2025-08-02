@@ -1,27 +1,42 @@
-[gd_scene load_steps=6 format=3 uid="uid://cfajfe4sbt0k7"]
+[gd_scene load_steps=7 format=3 uid="uid://cfajfe4sbt0k7"]
 
-[ext_resource type="Texture2D" uid="uid://dk3cr4pc74pi0" path="res://assets/texture_4.png" id="1_bfasp"]
+[ext_resource type="Texture2D" uid="uid://dk3cr4pc74pi0" path="res://assets/textures/texture_4.png" id="1_cmdsa"]
 [ext_resource type="Script" uid="uid://b2dqx8cq8dgaw" path="res://scripts/hand_script.gd" id="2_e75s6"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4flbx"]
-cull_mode = 1
-albedo_color = Color(0, 0, 0, 1)
-grow = true
-grow_amount = 0.05
-proximity_fade_enabled = true
-distance_fade_min_distance = 329.56
-distance_fade_max_distance = 235.4
+[ext_resource type="Material" uid="uid://bve0ydnggk5hd" path="res://assets/materials/outline_material.tres" id="2_k7pjy"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i3pqv"]
-next_pass = SubResource("StandardMaterial3D_4flbx")
-albedo_texture = ExtResource("1_bfasp")
+next_pass = ExtResource("2_k7pjy")
+albedo_texture = ExtResource("1_cmdsa")
 uv1_triplanar = true
 
-[sub_resource type="SphereMesh" id="SphereMesh_sweqy"]
+[sub_resource type="SphereMesh" id="SphereMesh_k7pjy"]
 material = SubResource("StandardMaterial3D_i3pqv")
 radius = 0.25
 height = 0.5
+radial_segments = 8
+rings = 4
 
-[node name="hand" type="CSGMesh3D"]
-mesh = SubResource("SphereMesh_sweqy")
+[sub_resource type="SphereShape3D" id="SphereShape3D_cmdsa"]
+radius = 0.4
+
+[node name="default_hand" type="CSGMesh3D"]
+mesh = SubResource("SphereMesh_k7pjy")
 script = ExtResource("2_e75s6")
+
+[node name="hand_area" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hand_area"]
+visible = false
+shape = SubResource("SphereShape3D_cmdsa")
+
+[node name="object_pos" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.2)
+
+[node name="hold_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="await_drag_timer" type="Timer" parent="."]
+wait_time = 0.25
+one_shot = true
