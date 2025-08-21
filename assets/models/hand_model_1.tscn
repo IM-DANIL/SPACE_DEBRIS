@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cm4jyjvnojnct"]
+
+[ext_resource type="PackedScene" uid="uid://b6esf4575uc8l" path="res://assets/models/hand_model_1.glb" id="1_q4fsa"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q4fsa"]
+cull_mode = 1
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.125
+
+[node name="hand_model_1" instance=ExtResource("1_q4fsa")]
+
+[node name="outline" parent="." index="5"]
+material_override = SubResource("StandardMaterial3D_q4fsa")

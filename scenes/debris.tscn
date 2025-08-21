@@ -5,6 +5,9 @@
 [ext_resource type="Material" uid="uid://bve0ydnggk5hd" path="res://assets/materials/outline_material.tres" id="3_5x5xt"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1ysct"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_mdwxd"]
 radius = 0.249838
@@ -23,14 +26,14 @@ height = 0.5
 radial_segments = 16
 rings = 8
 
-[node name="default_debris" type="RigidBody3D" groups=["debris"]]
+[node name="debris" type="RigidBody3D" groups=["debris", "object"]]
 collision_layer = 4
 collision_mask = 5
 gravity_scale = 0.0
 can_sleep = false
 script = ExtResource("1_1ysct")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="sync" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_1ysct")
 visibility_update_mode = 1
 
@@ -46,8 +49,8 @@ shape = SubResource("SphereShape3D_mdwxd")
 visible = false
 shape = SubResource("SphereShape3D_j5p87")
 
-[node name="model_mesh" type="CSGCombiner3D" parent="."]
+[node name="debris_model" type="CSGCombiner3D" parent="."]
 material_override = SubResource("StandardMaterial3D_vj5lu")
 
-[node name="CSGMesh3D" type="CSGMesh3D" parent="model_mesh"]
+[node name="CSGMesh3D" type="CSGMesh3D" parent="debris_model"]
 mesh = SubResource("SphereMesh_ysj2y")

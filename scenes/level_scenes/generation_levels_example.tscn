@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dh65dux756oyi"]
+
+[ext_resource type="PackedScene" uid="uid://dsswvstdg7h0x" path="res://scenes/player_scenes/player.tscn" id="1_1wsb4"]
+
+[sub_resource type="GDScript" id="GDScript_1wsb4"]
+script/source = "extends Node3D
+
+@onready var SATELLITE: PackedScene = preload(\"res://levels/satellite_0.tscn\")
+
+func _ready() -> void:
+	for i in range(20):
+		var satellite: Node3D = SATELLITE.instantiate()
+		add_child(satellite)
+		satellite.global_position = Vector3i(i * randi_range(-1, 1), i * randi_range(-1, 1), i * randi_range(-1, 1))
+		satellite.rotation = Vector3(deg_to_rad(randi_range(0, 360)), deg_to_rad(randi_range(0, 360)), deg_to_rad(randi_range(0, 360)))
+"
+
+[node name="generation_levels_example" type="Node3D"]
+script = SubResource("GDScript_1wsb4")
+
+[node name="player" parent="." instance=ExtResource("1_1wsb4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

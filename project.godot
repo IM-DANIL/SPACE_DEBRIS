@@ -17,25 +17,23 @@ config/icon="uid://c77b7nnaw51u8"
 
 [autoload]
 
-SettingsScript="*res://scripts/settings_script.gd"
-Console="*res://addons/console/console.gd"
+SettingsManager="*res://scripts/multiplayer_scripts/settings_manager.gd"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
+window/size/mode=3
+window/size/always_on_top=true
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/console/plugin.cfg")
 
 [global_group]
 
 hand=""
 player=""
+object=""
 debris=""
 
 [input]

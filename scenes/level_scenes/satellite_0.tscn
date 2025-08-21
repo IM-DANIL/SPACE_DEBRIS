@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://dyq661d7ku61i"]
+
+[ext_resource type="Texture2D" uid="uid://bxpsm1lv87ady" path="res://assets/textures/texture_01.png" id="1_rdsil"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fdx63"]
+albedo_texture = ExtResource("1_rdsil")
+uv1_triplanar = true
+
+[node name="satellite_0" type="CSGCombiner3D"]
+material_override = SubResource("StandardMaterial3D_fdx63")
+use_collision = true
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="."]
+radius = 2.0
